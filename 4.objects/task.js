@@ -6,6 +6,7 @@ function Student(name, gender, age) {
         subject: "",
         mark: "",
     }
+}
     let student1 = new Student("Tony", "male", 37);
     student1.setSubject("Algebra");
     student1.addMark(5);
@@ -22,7 +23,7 @@ function Student(name, gender, age) {
     student2.exclude('low grades')
     console.log(student2)
 // {name: "Buzz", gender: "female", age: 35, excluded: "low grades"}
-}
+
 
 Student.prototype.setSubject = function (subjectName) {
     this.subject = subjectName;
@@ -38,16 +39,10 @@ Student.prototype.addMark = function (mark) {
     return this.marks;
 }
 Student.prototype.addMarks = function (...appraisals) {
-    let sum = 0;
     if(this.marks === undefined){
-        this.marks = [];
-        for(let i of appraisals) {
-            this.mark.push(i);
-        }
-    }else{
-
+        Student.prototype.marks = [];
     }
-    return this.marks;
+    this.marks.push(appraisals);
 }
 Student.prototype.getAverage = function (addMarks) {
     let marks = this.addMarks();
