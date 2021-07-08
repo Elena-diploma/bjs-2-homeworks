@@ -1,62 +1,35 @@
 function Student(name, gender, age) {
-    return {
-        name,
-        gender,
-        age,
-        subject: "",
-        mark: "",
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
     }
-}
-    let student1 = new Student("Tony", "male", 37);
-    student1.setSubject("Algebra");
-    student1.addMark(5);
-    student1.addMark(4);
-    student1.addMark(5);
-    console.log(student1.getAverage()); //4.6666
-    console.log(student1);
-// {age: 37, gender: "male", marks: [5, 4, 5], name: "Tony", subject: "Algebra"}
-    let student2 = new Student("Buzz", "female", 35);
-    student2.setSubject("Geometry");
-    student2.addMark(2);
-    student2.addMark(3);
-    student2.addMark(2);
-    student2.exclude('low grades')
-    console.log(student2)
-// {name: "Buzz", gender: "female", age: 35, excluded: "low grades"}
 
+let student3 = new Student("Иван", "male", 30);
+let student4 = new Student("Вася", "male", 25);
 
-Student.prototype.setSubject = function (subjectName) {
-    this.subject = subjectName;
-    return this.subject;
-}
+Student.prototype.setSubject = function (subjectName) { this.subject = subjectName; }
+
 Student.prototype.addMark = function (mark) {
-    this.mark = mark;
     if(this.marks === undefined){
-        this.marks = [this.mark];
-    }else{
-        this.mark.push(this.mark);
+        this.marks = [];
     }
-    return this.marks;
+    this.marks.push(mark);
 }
-Student.prototype.addMarks = function (...appraisals) {
-    if(this.marks === undefined){
-        Student.prototype.marks = [];
-    }
-    this.marks.push(appraisals);
+
+Student.prototype.addMarks = function (...marks) {
+    marks.forEach( it => this.addMark(it));
 }
-Student.prototype.getAverage = function (addMarks) {
-    let marks = this.addMarks();
-    let average = sum/marks.length;
+
+Student.prototype.getAverage = function () {
     let sum = 0;
-    for(let i of marks) {
-        sum += marks[i];
+    for(let mark of this.marks) {
+        sum += mark;
     }
-    return average;
+    return sum / this.marks.length;
 }
 
 Student.prototype.exclude = function (reason) {
-    this.exclude = reason;
+    this.excluded = reason;
     delete this.subject;
     delete this.marks;
-    return this.exclude [reason];
 }
