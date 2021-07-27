@@ -8,7 +8,7 @@ function cachingDecoratorNew(func) {
         if (idx !== -1 ) {
             console.log("Из кеша: " + cache[idx].value);
             return "Из кэша: " + cache[idx].value;
-        } else {
+        }
             let result = func.apply(this, args);
             cache.push({"hash": hash, "value": result});
 
@@ -17,10 +17,11 @@ function cachingDecoratorNew(func) {
             }
             console.log("Вычисляем: " + result);
             return "Вычисляем: " + result;
-        }
+
     }
     return wrapper;
 }
+
 
 // задание2
 
@@ -29,12 +30,15 @@ function debounceDecoratorNew(func, ms) {
     let timeout;
     let checkFunc = false;
     return function (...args) {
-        if (checkFunc === true) {
-            timeout = setTimeout(() => {
-                func.apply(this, args);
-                checkFunc = true;
-            }, ms);
+        if (checkFunc) {
+            return;
         }
+        func.apply(this, args);
+        checkFunc = false;
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+            checkFunc = false;
+            }, ms);
     }
 }
 
@@ -46,21 +50,11 @@ setTimeout(upgradedSendSignal, 300); // проигнорировано так к
 // задание3
 
 function debounceDecorator2(func) {
-    let timeout;
-    let checkFunc = false;
-    return function (...args) {
-        if (checkFunc === true) {
-            timeout = setTimeout(() => {
-                func.apply(this, args);
-                checkFunc = true;
-            }, ms);
-        }
-    }
     function wrapper(...args) {
-        wrapper.history.push(args);
-        return func.call(this, ...args);
-        }
-    wrapper.history = [];
+        wrapper.count.push(args)
+        return func.call(this, ...args)
+    }
+    wrapper.count = []
     return wrapper;
 }
 
