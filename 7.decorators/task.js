@@ -50,11 +50,24 @@ setTimeout(upgradedSendSignal, 300); // проигнорировано так к
 // задание3
 
 function debounceDecorator2(func) {
+    let timeout;
+    let checkFunc = false;
+    return function (...args) {
+        if (checkFunc) {
+            return;
+        }
+        func.apply(this, args);
+        checkFunc = false;
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+            checkFunc = false;
+        }, ms);
+    }
     function wrapper(...args) {
-        wrapper.count.push(args)
+        wrapper.count++;
         return func.call(this, ...args)
     }
-    wrapper.count = []
+    wrapper.count = 0;
     return wrapper;
 }
 
