@@ -17,62 +17,47 @@ function cachingDecoratorNew(func) {
             }
             console.log("Вычисляем: " + result);
             return "Вычисляем: " + result;
-
     }
     return wrapper;
 }
 
-
 // задание2
-
 const showCoords = (x, y) => console.log(`Клик:(${x},${y})`);
 function debounceDecoratorNew(func, ms) {
-    let timeout;
     let checkFunc = false;
     return function (...args) {
         if (checkFunc) {
+            console.log("Выкидываем " + ms);
             return;
         }
         func.apply(this, args);
-        checkFunc = false;
-        timeout = setTimeout(() => {
+        console.log("Вызвали сразу " + ms);
+        checkFunc = true;
+        setTimeout(() => {
             func.apply(this, args);
-            checkFunc = false;
-            }, ms);
-    }
-}
-
-const sendSignal = () => console.log("Сигнал отправлен");
-const upgradedSendSignal = debounceDecoratorNew(sendSignal, 2000);
-setTimeout(upgradedSendSignal); // Сигнал отправлен
-setTimeout(upgradedSendSignal, 300); // проигнорировано так как от последнего вызова прошло менее 2000мс
-
-// задание3
-
-function debounceDecorator2(func) {
-    let timeout;
-    let checkFunc = false;
-    return function (...args) {
-        if (checkFunc) {
-            return;
-        }
-        func.apply(this, args);
-        checkFunc = false;
-        timeout = setTimeout(() => {
-            func.apply(this, args);
+            console.log("Вызвали с задержкой " + ms);
             checkFunc = false;
         }, ms);
     }
-    function wrapper(...args) {
+}
+
+// задание3
+function debounceDecorator2(func, ms) {
+    let checkFunc = false;
+    let wrapper = function wrapper (...args) {
+        if (checkFunc) {
+            console.log("Выкидываем " + ms);
+            return;
+        }
+        func.apply(this, args);
         wrapper.count++;
-        return func.call(this, ...args)
+        checkFunc = true;
+        setTimeout(() => {
+            func.apply(this, args);
+            checkFunc = false;
+            wrapper.count++;
+        }, ms);
     }
     wrapper.count = 0;
     return wrapper;
 }
-
-
-const upgradedAdd = debounceDecorator2(showCoords);
-upgradedAdd(100, 200);
-console.log(upgradedAdd.history); // [100,200] , [1,1]
-
